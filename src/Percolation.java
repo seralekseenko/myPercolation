@@ -1,17 +1,17 @@
 public class Percolation {
-    private boolean[][] siteStatus;
-    private int openSites = 0;
-
-    private MyUF UF;
-
+    
+    private final boolean[][] siteStatus;
+    private final int openSites = 0;
+    // uf
+    private final MyUF UF;
 
     /**
-     * Constructor.
+     * Create square grid.
+     * 
      * @param n - the dimension of the grid.
      */
     public Percolation(int n) {
         if (n <= 0) throw new IllegalArgumentException("Invalid input argument.");
-
         siteStatus = new boolean[n][n];
         UF = new MyUF(n * n + 2);
     }
@@ -21,20 +21,20 @@ public class Percolation {
      * @param row - coordinate row <= 1 && row <= n
      * @param col - coordinate col <= 1 && col <= n
      */
-    public void open (int row, int col) {
+    public void open(int row, int col) {
         if (!isLegalCoordinate(row, col)) throw new IllegalArgumentException("Invalid input argument.");
         if (isOpen(row, col)) return;
 
         siteStatus[row - 1][col - 1] = true;
-        if (row == 1 || row == getSize()) connectWithVirtualSites(row, col);
+        connectWithVirtualSites(row, col);
         connectWithOpenSites(row, col);
         openSites++;
     }
 
     /**
-     * This method indicates the status of the cell: closed or open.
-     * @param row,col - coordinate an incoming cell
-     * @return true or false
+     * This method indicates the status of the cell.
+     *
+     * @return true if the cell is open.
      */
     public boolean isOpen(int row, int col) {
         if (!isLegalCoordinate(row, col)) throw new IllegalArgumentException("Invalid input argument.");
@@ -42,19 +42,21 @@ public class Percolation {
     }
 
     /**
-     * This method checks the connection to the top virtual cell. The presence of
-     * communication with the upper virtual cell indicates the fullness of the cell.
-     * @param row,col - coordinate an incoming cell
-     * @return ????
+     * Method return percolation status of the cell. If the cell is percolate it is called full. 
+     * 
+     * @param row - of the cell that you checking
+     * @param col - of the cell that you checking
+     * @return true - is the cell is full, false othervise
      */
     public boolean isFull(int row, int col) {
         if (!isLegalCoordinate(row, col)) throw new IllegalArgumentException("Invalid input argument.");
+        // This method checks the connection to the top virtual cell communication with the upper virtual cell indicates the fullness of the cell.. If cell is connected to cell with index 0 ...
+        // cell with 0 ...
         return UF.isConnected(0, getIndex(row, col));
     }
 
     /**
-     * This method says how many open cells are in the grid.
-     * @return ??
+     * @return - how many open cells are in the grid.
      */
     public int numberOfOpenSites() {
         return openSites;
@@ -94,10 +96,11 @@ public class Percolation {
      * This method combines an incoming cell with a virtual cell.
      * @param row,col - coordinate an incoming cell
      */
+    // maybeConnectWithVirtualSites
     private void connectWithVirtualSites(int row, int col) {
         if (row == 1) {
             UF.union(0, getIndex(row, col));
-        } else {
+        } else if (/**/) {
             UF.union(getSize() * getSize() + 1, getIndex(row, col));
         }
     }
