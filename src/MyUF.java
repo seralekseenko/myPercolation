@@ -1,10 +1,9 @@
 class MyUF {
 
-    private int[] id;
-    private int[] treeSize;
+    private final int[] id;
+    private final int[] treeSize;
 
     /**
-     *Constructor.
      * @param n - Amount of elements.
      */
     MyUF(int n) {
@@ -17,9 +16,11 @@ class MyUF {
     }
 
     /**
-     * The method confirms or denies the relationship between the arguments.
-     * @param p - first argument p >= 0 && p < n
-     * @param q - second argument q >= 0 && p < n
+     * Checs if the cells are connected or not.
+     * @param p - first argument (p >= 0 && p < n)
+     * @param q - second argument (q >= 0 && q < n)
+     * @return - true if the cells are connected.
+     * @throws IllegalArgumentException - if input arguments are not within boundaries.
      */
     boolean isConnected(int p, int q) {
         return root(p) == root(q);
@@ -28,7 +29,8 @@ class MyUF {
     /**
      * The method searches for the root for the input argument.
      * @param i - the argument must be within: i >= 0 && i < n
-     * @return
+     * @return index of the root of the input element
+     * @throws IllegalArgumentException - if input arguments are not within boundaries.
      */
     private int root(int i) {
         validate(i);
