@@ -5,16 +5,16 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class MyUFTest {
+    
+    private MyUF uf;
 
     @Before
     public void setUp() {
-        MyUF uf = new MyUF(10); // не работает!!!
+        uf = new MyUF(10); // не работает!!!
     }
 
     @Test
     public void unionEndIsConnected() {
-        MyUF uf = new MyUF(10);
-
         uf.union(0, 1);
         uf.union(8, 9);
 
