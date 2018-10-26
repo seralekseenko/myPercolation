@@ -41,7 +41,7 @@ public class PercolationTest {
     }
 
     @Test
-    public void isOpen() {
+    public void testIsOpen() {
         Percolation percolation = new Percolation(4);
 
         percolation.open(1, 1);
@@ -54,7 +54,7 @@ public class PercolationTest {
     }
 
     @Test
-    public void isFull() {
+    public void testIsFull() {
         Percolation percolation = new Percolation(4);
 
         percolation.open(1, 1);
@@ -67,7 +67,7 @@ public class PercolationTest {
     }
 
     @Test
-    public void numberOfOpenSites() {
+    public void testNumberOfOpenSites() {
         Percolation percolation = new Percolation(4);
 
         percolation.open(1, 1);
@@ -82,7 +82,7 @@ public class PercolationTest {
     }
 
     @Test
-    public void percolates() {
+    public void testPercolates() {
         Percolation percolation = new Percolation(4);
 
         percolation.open(1, 1);
