@@ -62,7 +62,6 @@ public class Percolation {
 
     /**
      * This method checks whether the system is leaking at this moment.
-     * @return
      */
     public boolean percolates() {
         return UF.isConnected(0, getSize() * getSize() + 1);
