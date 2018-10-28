@@ -1,17 +1,17 @@
 public class Percolation {
     
     private final boolean[][] siteStatus;
-    private final int openSites = 0;
-    // uf
     private final MyUF UF;
+
+    private  int openSites = 0;
 
     /**
      * Create square grid.
      * 
      * @param n - the dimension of the grid.
      */
-    public Percolation(int n) {
-        if (n <= 0) throw new IllegalArgumentException("Invalid input argument.");
+    public Percolation(int n) throws IllegalArgumentException {
+        if (n <= 0) throw new IllegalArgumentException("Invalid input argument. n: " + n);
         siteStatus = new boolean[n][n];
         UF = new MyUF(n * n + 2);
     }
@@ -21,12 +21,12 @@ public class Percolation {
      * @param row - coordinate row <= 1 && row <= n
      * @param col - coordinate col <= 1 && col <= n
      */
-    public void open(int row, int col) {
-        if (!isLegalCoordinate(row, col)) throw new IllegalArgumentException("Invalid input argument.");
+    public void open(int row, int col) throws IllegalArgumentException {
+        isLegalCoordinate(row, col);
         if (isOpen(row, col)) return;
 
         siteStatus[row - 1][col - 1] = true;
-        connectWithVirtualSites(row, col);
+        maybeConnectWithVirtualSites(row, col);
         connectWithOpenSites(row, col);
         openSites++;
     }
@@ -36,8 +36,8 @@ public class Percolation {
      *
      * @return true if the cell is open.
      */
-    public boolean isOpen(int row, int col) {
-        if (!isLegalCoordinate(row, col)) throw new IllegalArgumentException("Invalid input argument.");
+    public boolean isOpen(int row, int col) throws IllegalArgumentException {
+        isLegalCoordinate(row, col);
         return siteStatus[row - 1][col - 1];
     }
 
@@ -48,10 +48,12 @@ public class Percolation {
      * @param col - of the cell that you checking
      * @return true - is the cell is full, false othervise
      */
-    public boolean isFull(int row, int col) {
-        if (!isLegalCoordinate(row, col)) throw new IllegalArgumentException("Invalid input argument.");
-        // This method checks the connection to the top virtual cell communication with the upper virtual cell indicates the fullness of the cell.. If cell is connected to cell with index 0 ...
-        // cell with 0 ...
+    public boolean isFull(int row, int col) throws IllegalArgumentException {
+        isLegalCoordinate(row, col);
+        // This method checks the connection to the top virtual cell communication with the upper virtual cell indicates
+        // the fullness of the cell..
+        // If cell is connected to cell with index 0 it is called full.
+
         return UF.isConnected(0, getIndex(row, col));
     }
 
@@ -73,10 +75,10 @@ public class Percolation {
      *This method checks the validity of coordinate values.
      * @param row - coordinate row <= 1 && row <= n
      * @param col - coordinate col <= 1 && col <= n
-     * @return true or false
      */
-    private boolean isLegalCoordinate(int row, int col) {
-        return row > 0 && row <= getSize() && col > 0 && col <= getSize();
+    private void isLegalCoordinate(int row, int col) throws IllegalArgumentException {
+        if (row < 1 || row > getSize()) throw new IllegalArgumentException("Invalid input argument. row: " + row);
+        if (col < 1 || col > getSize()) throw new IllegalArgumentException("Invalid input argument. col: " + col);
     }
 
     private int getSize(){
@@ -96,11 +98,10 @@ public class Percolation {
      * This method combines an incoming cell with a virtual cell.
      * @param row,col - coordinate an incoming cell
      */
-    // maybeConnectWithVirtualSites
-    private void connectWithVirtualSites(int row, int col) {
+    private void maybeConnectWithVirtualSites(int row, int col) {
         if (row == 1) {
             UF.union(0, getIndex(row, col));
-        } else if (/**/) {
+        } else if (row == getSize()) {
             UF.union(getSize() * getSize() + 1, getIndex(row, col));
         }
     }
@@ -110,13 +111,21 @@ public class Percolation {
      * @param row,col - coordinate an incoming cell
      */
     private void connectWithOpenSites(int row, int col) {
-        if (isLegalCoordinate(row - 1, col))// upper
-            UF.union(getIndex(row - 1, col), getIndex(row, col));
-        if (isLegalCoordinate(row, col - 1))// left
-            UF.union(getIndex(row, col - 1), getIndex(row, col));
-        if (isLegalCoordinate(row, col + 1))// right
-            UF.union(getIndex(row, col + 1), getIndex(row, col));
-        if (isLegalCoordinate(row + 1, col))// bottom
-            UF.union(getIndex(row + 1, col), getIndex(row, col));
+        try {
+            if (isOpen(row - 1, col))// upper
+                UF.union(getIndex(row - 1, col), getIndex(row, col));
+        } catch (IllegalArgumentException ignored) {}
+        try {
+            if (isOpen(row, col - 1))// left
+                UF.union(getIndex(row, col - 1), getIndex(row, col));
+        } catch (IllegalArgumentException ignored) {}
+        try {
+            if (isOpen(row, col + 1))// right
+                UF.union(getIndex(row, col + 1), getIndex(row, col));
+        } catch (IllegalArgumentException ignored) {}
+        try {
+            if (isOpen(row + 1, col))// bottom
+                UF.union(getIndex(row + 1, col), getIndex(row, col));
+        } catch (IllegalArgumentException ignored) {}
     }
 }
