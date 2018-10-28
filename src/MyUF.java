@@ -16,7 +16,7 @@ class MyUF {
     }
 
     /**
-     * Checs if the cells are connected or not.
+     * Checks if the cells are connected or not.
      * @param p - first argument (p >= 0 && p < n)
      * @param q - second argument (q >= 0 && q < n)
      * @return - true if the cells are connected.
