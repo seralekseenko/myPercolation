@@ -95,4 +95,24 @@ public class PercolationTest {
 
         assertTrue(percolation.percolates());
     }
+
+    @Test
+    public void testConnectWithOpenSites() {
+        Percolation percolation = new Percolation(4);
+
+        percolation.open(1, 1);
+        percolation.open(4, 4);
+        percolation.open(1, 4);
+        percolation.open(4, 1);
+
+        assertTrue(percolation.isOpen(1, 1));
+        assertTrue(percolation.isOpen(4, 4));
+        assertTrue(percolation.isOpen(1, 4));
+        assertTrue(percolation.isOpen(4, 1));
+
+        percolation.open(3, 2);
+        percolation.open(2, 3);
+
+        assertFalse(percolation.percolates());
+    }
 }
