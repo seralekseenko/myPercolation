@@ -34,7 +34,7 @@ class MyUF {
      */
     private int root(int i) {
         validate(i);
-        while(i != id[i]){
+        while (i != id[i]) {
             id[i] = id[id[i]];
             i = id[i];
         }
@@ -71,7 +71,7 @@ class MyUF {
         if  (treeSize[i] < treeSize[j]) {
             id[i] = j;
             treeSize[j] += treeSize[i];
-        }  else{
+        }  else {
             id[j] = i;
             treeSize[i] += treeSize[j];
         }
