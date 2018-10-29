@@ -1,7 +1,9 @@
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+
 public class Percolation {
     
     private final boolean[][] siteStatus;
-    private final MyUF UF;
+    private final WeightedQuickUnionUF myUF;
 
     private  int openSites = 0;
 
@@ -10,10 +12,10 @@ public class Percolation {
      * 
      * @param n - the dimension of the grid.
      */
-    public Percolation(int n) throws IllegalArgumentException {
+    public Percolation(int n) {
         if (n <= 0) throw new IllegalArgumentException("Invalid input argument. n: " + n);
         siteStatus = new boolean[n][n];
-        UF = new MyUF(n * n + 2);
+        myUF = new WeightedQuickUnionUF(n * n + 2);
     }
 
     /**
@@ -21,7 +23,7 @@ public class Percolation {
      * @param row - coordinate row <= 1 && row <= n
      * @param col - coordinate col <= 1 && col <= n
      */
-    public void open(int row, int col) throws IllegalArgumentException {
+    public void open(int row, int col) {
         isLegalCoordinate(row, col);
         if (isOpen(row, col)) return;
 
@@ -36,7 +38,7 @@ public class Percolation {
      *
      * @return true if the cell is open.
      */
-    public boolean isOpen(int row, int col) throws IllegalArgumentException {
+    public boolean isOpen(int row, int col) {
         isLegalCoordinate(row, col);
         return siteStatus[row - 1][col - 1];
     }
@@ -48,13 +50,13 @@ public class Percolation {
      * @param col - of the cell that you checking
      * @return true - is the cell is full, false othervise
      */
-    public boolean isFull(int row, int col) throws IllegalArgumentException {
+    public boolean isFull(int row, int col) {
         isLegalCoordinate(row, col);
         // This method checks the connection to the top virtual cell communication with the upper virtual cell indicates
         // the fullness of the cell..
         // If cell is connected to cell with index 0 it is called full.
 
-        return UF.isConnected(0, getIndex(row, col));
+        return myUF.connected(0, getIndex(row, col));
     }
 
     /**
@@ -68,7 +70,7 @@ public class Percolation {
      * This method checks whether the system is leaking at this moment.
      */
     public boolean percolates() {
-        return UF.isConnected(0, getSize() * getSize() + 1);
+        return myUF.connected(0, getSize() * getSize() + 1);
     }
 
     /**
@@ -76,17 +78,17 @@ public class Percolation {
      * @param row - coordinate row <= 1 && row <= n
      * @param col - coordinate col <= 1 && col <= n
      */
-    private void isLegalCoordinate(int row, int col) throws IllegalArgumentException {
+    private void isLegalCoordinate(int row, int col) {
         if (row < 1 || row > getSize()) throw new IllegalArgumentException("Invalid input argument. row: " + row);
         if (col < 1 || col > getSize()) throw new IllegalArgumentException("Invalid input argument. col: " + col);
     }
 
-    private int getSize(){
+    private int getSize() {
         return siteStatus.length;
     }
 
     /**
-     * This method is necessary for working with UF*.
+     * This method is necessary for working with myUF*.
      * @param row,col - coordinate an incoming cell
      * @return index of incoming cell
      */
@@ -100,9 +102,9 @@ public class Percolation {
      */
     private void maybeConnectWithVirtualSites(int row, int col) {
         if (row == 1) {
-            UF.union(0, getIndex(row, col));
+            myUF.union(0, getIndex(row, col));
         } else if (row == getSize()) {
-            UF.union(getSize() * getSize() + 1, getIndex(row, col));
+            myUF.union(getSize() * getSize() + 1, getIndex(row, col));
         }
     }
 
@@ -113,19 +115,26 @@ public class Percolation {
     private void connectWithOpenSites(int row, int col) {
         try {
             if (isOpen(row - 1, col))// upper
-                UF.union(getIndex(row - 1, col), getIndex(row, col));
-        } catch (IllegalArgumentException ignored) {}
+                myUF.union(getIndex(row - 1, col), getIndex(row, col));
+        } catch (IllegalArgumentException ignored) { //
+        }
         try {
             if (isOpen(row, col - 1))// left
-                UF.union(getIndex(row, col - 1), getIndex(row, col));
-        } catch (IllegalArgumentException ignored) {}
+                myUF.union(getIndex(row, col - 1), getIndex(row, col));
+        } catch (IllegalArgumentException ignored) { //
+
+        }
         try {
             if (isOpen(row, col + 1))// right
-                UF.union(getIndex(row, col + 1), getIndex(row, col));
-        } catch (IllegalArgumentException ignored) {}
+                myUF.union(getIndex(row, col + 1), getIndex(row, col));
+        } catch (IllegalArgumentException ignored) { //
+
+        }
         try {
             if (isOpen(row + 1, col))// bottom
-                UF.union(getIndex(row + 1, col), getIndex(row, col));
-        } catch (IllegalArgumentException ignored) {}
+                myUF.union(getIndex(row + 1, col), getIndex(row, col));
+        } catch (IllegalArgumentException ignored) { //
+
+        }
     }
 }
