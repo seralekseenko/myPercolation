@@ -43,7 +43,7 @@ public class PercolationStats {
      * @param n - Grid size.
      * @param t - The number of percolation t over the grid.
      */
-    private void runPercolationTests(int n, int t) {
+    private void runPercolationTests(int n, int t) { // O(
         for (int i = 0; i < t; i++) { // t test's
             Percolation p = new Percolation(n);
             int numberOfOpenSites = 0;
