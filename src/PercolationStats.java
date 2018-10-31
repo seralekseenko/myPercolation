@@ -1,4 +1,3 @@
-
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
@@ -6,7 +5,12 @@ import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
 
+    private static final double K = 1.96;
+
     private final double[] percolationThreshold;
+
+    private final double mean;
+    private final double stddev;
 
     /**
      * Checks the validity of the arguments. Runs a percolation test.
@@ -21,20 +25,21 @@ public class PercolationStats {
 
         runPercolationTests(n, tests);
 
-
+        mean = StdStats.mean(percolationThreshold);
+        stddev = StdStats.stddev(percolationThreshold);
     }
 
     public double mean() {
-        return StdStats.mean(percolationThreshold);
+        return mean;
     }
     public double stddev() {
-        return StdStats.stddev(percolationThreshold);
+        return stddev;
     }
     public double confidenceLo() {
-        return mean() - (1.96 * stddev() / Math.sqrt(percolationThreshold.length));
+        return mean - (K * stddev / Math.sqrt(percolationThreshold.length));
     }
     public double confidenceHi() {
-        return mean() + (1.96 * stddev() / Math.sqrt(percolationThreshold.length));
+        return mean + (K * stddev / Math.sqrt(percolationThreshold.length));
     }
 
 
@@ -45,18 +50,19 @@ public class PercolationStats {
      */
     private void runPercolationTests(int n, int t) { // O(
         for (int i = 0; i < t; i++) { // t test's
+
             Percolation p = new Percolation(n);
-            int numberOfOpenSites = 0;
-            boolean isPercolate = false;
 
-            while (!isPercolate) {
-                p.open(StdRandom.uniform(n) + 1, StdRandom.uniform(n) + 1);
-                numberOfOpenSites = p.numberOfOpenSites();
+            while (!p.percolates()) {
+                int row = StdRandom.uniform(n) + 1;
+                int col = StdRandom.uniform(n) + 1;
 
-                if (numberOfOpenSites >= n) isPercolate = p.percolates(); // O(n)
+                if (!p.isOpen(row, col)) {
+                    p.open(row, col);
+                }
 
             }
-            percolationThreshold[i] = (double) numberOfOpenSites / (n * n);
+            percolationThreshold[i] = (double) p.numberOfOpenSites() / (n * n);
         }
     }
 
@@ -67,10 +73,11 @@ public class PercolationStats {
      * @param args [0] & [1] - include integer n(the grid size) & integer t (the number of experiments)
      */
     public static void main(String [] args) {
-
+        System.out.println(StdRandom.uniform(1));
+        System.out.println(StdRandom.uniform(1) + 1);
         int n;
         int t;
-        if (args.length != 0) {
+        if (args.length == 2) {
             n = Integer.parseInt(args[0]);
             t = Integer.parseInt(args[1]);
         } else {

@@ -22,7 +22,7 @@ class MyUF {
      * @return - true if the cells are connected.
      * @throws IllegalArgumentException - if input arguments are not within boundaries.
      */
-    boolean isConnected(int p, int q) { // O(n + log n)
+    boolean connected(int p, int q) { // O(n + log n)
         return root(p) == root(q);
     }
 

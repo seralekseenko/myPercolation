@@ -4,6 +4,7 @@ public class Percolation {
     
     private final boolean[][] siteStatus;
     private final WeightedQuickUnionUF myUF;
+    private final int size;
 
     private  int openSites = 0;
 
@@ -15,6 +16,7 @@ public class Percolation {
     public Percolation(int n) { // O(n^2)
         if (n <= 0) throw new IllegalArgumentException("Invalid input argument. n: " + n);
         siteStatus = new boolean[n][n];
+        size = siteStatus.length;
         myUF = new WeightedQuickUnionUF(n * n + 2);
     }
 
@@ -28,8 +30,12 @@ public class Percolation {
         if (isOpen(row, col)) return; // O(1)
 
         siteStatus[row - 1][col - 1] = true;
-        maybeConnectWithVirtualSites(row, col);
+
         connectWithOpenSites(row, col);
+
+        if (row == 1 || row == size) {
+            maybeConnectWithVirtualSites(row, col);
+        }
         openSites++;
     }
 
@@ -63,14 +69,21 @@ public class Percolation {
      * @return - how many open cells are in the grid.
      */
     public int numberOfOpenSites() { // O(1)
-        return openSites;
+        return this.openSites;
     }
 
     /**
      * This method checks whether the system is leaking at this moment.
      */
     public boolean percolates() { // O (n)
-        return myUF.connected(0, getSize() * getSize() + 1);
+
+        for (int i = 1; i <= size; i++) {
+                if (this.isOpen(size, i) && this.isFull(size, i))  {
+                    myUF.union(size * size + 1, getIndex(size, i)); // O(n)
+                    return true;
+                }
+        }
+        return false;
     }
 
     /**
@@ -79,40 +92,35 @@ public class Percolation {
      * @param col - coordinate col <= 1 && col <= n
      */
     private void assertCoordinate(int row, int col) { // O(1)
-        if (row < 1 || row > getSize()) throw new IllegalArgumentException("Invalid input argument. row: " + row);
-        if (col < 1 || col > getSize()) throw new IllegalArgumentException("Invalid input argument. col: " + col);
-    }
-
-    private int getSize() { // O(1)
-        return siteStatus.length;
+        if (row < 1 || row > size) throw new IllegalArgumentException("Invalid input argument. row: " + row);
+        if (col < 1 || col > size) throw new IllegalArgumentException("Invalid input argument. col: " + col);
     }
 
     /**
      * This method is necessary for working with myUF*.
-     * @param row,col - coordinate an incoming cell
+     * @param row - coordinate row <= 1 && row <= n
+     * @param col - coordinate col <= 1 && col <= n
      * @return index of incoming cell
      */
     private int getIndex(int row, int col) {
-        return (row - 1) * getSize() + col;
+        return (row - 1) * size + col;
     }
 
     /**
      * This method combines an incoming cell with a virtual cell.
-     * @param row - coordinate an incoming cell
-     * @param col - coordinate an incoming cell
+     * @param row - coordinate row <= 1 && row <= n
+     * @param col - coordinate col <= 1 && col <= n
      */
     private void maybeConnectWithVirtualSites(int row, int col) { // O(n)
         if (row == 1) {
             myUF.union(0, getIndex(row, col)); // O(n)
-        } else if (row == getSize()) {
-            myUF.union(getSize() * getSize() + 1, getIndex(row, col)); // O(n)
         }
     }
 
     /**
      * This method combines an incoming cell with neighboring cells that are also open.
-     * @param row - coordinate an incoming cell
-     * @param col - coordinate an incoming cell
+     * @param row - coordinate row <= 1 && row <= n
+     * @param col - coordinate col <= 1 && col <= n
      */
     private void connectWithOpenSites(int row, int col) { // O(4 * (n + log n))
 
@@ -122,10 +130,10 @@ public class Percolation {
         if (col > 1 && isOpen(row, col - 1))// left
             myUF.union(getIndex(row, col - 1), getIndex(row, col));
 
-        if (col < getSize() - 1 && isOpen(row, col + 1))// right
+        if (col < size && isOpen(row, col + 1))// right
             myUF.union(getIndex(row, col + 1), getIndex(row, col));
 
-        if (row < getSize() - 1 && isOpen(row + 1, col))// bottom
+        if (row < size && isOpen(row + 1, col))// bottom
             myUF.union(getIndex(row + 1, col), getIndex(row, col));
     }
 }
