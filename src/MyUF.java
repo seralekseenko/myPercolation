@@ -6,12 +6,12 @@ class MyUF {
     /**
      * @param n - Amount of elements.
      */
-    MyUF(int n) {
+    MyUF(int n) { // O(n)
         this.id = new int[n];
-        treeSize = new int[n];
+        this.treeSize = new int[n];
         for (int i = 0; i < n; i++) {
-            id[i] = i;
-            treeSize[i] = 1;
+            this.id[i] = i;
+            this.treeSize[i] = 1;
         }
     }
 
@@ -22,7 +22,7 @@ class MyUF {
      * @return - true if the cells are connected.
      * @throws IllegalArgumentException - if input arguments are not within boundaries.
      */
-    boolean isConnected(int p, int q) {
+    boolean isConnected(int p, int q) { // O(n + log n)
         return root(p) == root(q);
     }
 
@@ -32,8 +32,8 @@ class MyUF {
      * @return index of the root of the input element
      * @throws IllegalArgumentException - if input arguments are not within boundaries.
      */
-    private int root(int i) {
-        validate(i);
+    private int root(int i) { // O(n) O(lod n)
+        validate(i); // O(1)
         while (i != id[i]) {
             id[i] = id[id[i]];
             i = id[i];
@@ -45,7 +45,7 @@ class MyUF {
      * Checks the validity of the argument.
      * @param i - the argument to check.
      */
-    private void validate(int i) {
+    private void validate(int i) { // O(1)
         if (i < 0 || i >= id.length) {
             throw new IllegalArgumentException("Index "
                     + i
@@ -60,11 +60,11 @@ class MyUF {
      * @param p - first argument p >= 0 && p < n
      * @param q - second argument q >= 0 && p < n
      */
-    void union(int p, int q) {
+    void union(int p, int q) { // O(n + log n)
         validate(p);
         validate(q);
-        int i = root(p);
-        int j = root(q);
+        int i = root(p); // O(n)
+        int j = root(q); // O(log n)
 
         if (i == j) return;
 

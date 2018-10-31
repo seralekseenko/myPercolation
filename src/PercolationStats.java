@@ -4,9 +4,6 @@ import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
-import java.util.Arrays;
-
-
 public class PercolationStats {
 
     private final double[] percolationThreshold;
@@ -16,8 +13,8 @@ public class PercolationStats {
      * @param n - Grid size.
      * @param tests - The number of percolation tests over the grid.
      */
-    public PercolationStats(int n, int tests) {
-        if (n <= 0 ) throw new IllegalArgumentException("Invalid input argument. n: " + n);
+    public PercolationStats(int n, int tests) { // O(
+        if (n <= 0) throw new IllegalArgumentException("Invalid input argument. n: " + n);
         if (tests <= 0) throw new IllegalArgumentException("Invalid input argument. tests: " + tests);
 
         percolationThreshold = new double[tests];
@@ -52,14 +49,14 @@ public class PercolationStats {
             int numberOfOpenSites = 0;
             boolean isPercolate = false;
 
-            while(!isPercolate) {
+            while (!isPercolate) {
                 p.open(StdRandom.uniform(n) + 1, StdRandom.uniform(n) + 1);
                 numberOfOpenSites = p.numberOfOpenSites();
 
-                if (numberOfOpenSites >= n) isPercolate = p.percolates();
+                if (numberOfOpenSites >= n) isPercolate = p.percolates(); // O(n)
 
             }
-            percolationThreshold[i] = (double)numberOfOpenSites / (n * n);
+            percolationThreshold[i] = (double) numberOfOpenSites / (n * n);
         }
     }
 
@@ -69,7 +66,7 @@ public class PercolationStats {
      * May take arguments from the keyboard.
      * @param args [0] & [1] - include integer n(the grid size) & integer t (the number of experiments)
      */
-    public static void main (String [] args) {
+    public static void main(String [] args) {
 
         int n;
         int t;
@@ -84,10 +81,6 @@ public class PercolationStats {
             t = StdIn.readInt();
         }
         PercolationStats percolationStats = new PercolationStats(n, t);
-
-        System.out.println(Arrays.toString(percolationStats.percolationThreshold));
-        System.out.println(percolationStats.percolationThreshold.length);
-
 
         StdOut.printf("Mean                    = %.16f " +
                         "\nStddev                  = %1.16f " +
