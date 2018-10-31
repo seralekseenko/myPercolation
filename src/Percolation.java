@@ -77,7 +77,7 @@ public class Percolation {
      */
     public boolean percolates() { // O (n)
         if (myUF.count() - 2 > size * size - size) return false;
-        //System.out.println("myUF.count(): " + myUF.count() + " size * size: " + size * size + " siteStatus.l: " + siteStatus.length);
+        //TODO нужно избавится от цикла тут!
         for (int i = 1; i <= size; i++) {
                 if (this.isOpen(size, i) && this.isFull(size, i))  {
                     myUF.union(size * size + 1, getIndex(size, i)); // O(n)
