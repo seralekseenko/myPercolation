@@ -76,7 +76,7 @@ public class Percolation {
      * This method checks whether the system is leaking at this moment.
      */
     public boolean percolates() { // O (n)
-        if (myUF.count() < size) return false;
+        if (myUF.count() > size * size - size) return false;
         for (int i = 1; i <= size; i++) {
                 if (this.isOpen(size, i) && this.isFull(size, i))  {
                     myUF.union(size * size + 1, getIndex(size, i)); // O(n)
