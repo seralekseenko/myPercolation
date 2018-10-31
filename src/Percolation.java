@@ -33,7 +33,7 @@ public class Percolation {
 
         connectWithOpenSites(row, col);
 
-        if (row == 1) {
+        if (row == 1 || row == size) {
             maybeConnectWithVirtualSites(row, col);
         }
         openSites++;
@@ -76,7 +76,8 @@ public class Percolation {
      * This method checks whether the system is leaking at this moment.
      */
     public boolean percolates() { // O (n)
-        if (myUF.count() > size * size - size) return false;
+        if (myUF.count() - 2 > size * size - size) return false;
+        //System.out.println("myUF.count(): " + myUF.count() + " size * size: " + size * size + " siteStatus.l: " + siteStatus.length);
         for (int i = 1; i <= size; i++) {
                 if (this.isOpen(size, i) && this.isFull(size, i))  {
                     myUF.union(size * size + 1, getIndex(size, i)); // O(n)
@@ -112,7 +113,8 @@ public class Percolation {
      * @param col - coordinate col <= 1 && col <= n
      */
     private void maybeConnectWithVirtualSites(int row, int col) { // O(n)
-            myUF.union(0, getIndex(row, col)); // O(n)
+           if (row == 1) myUF.union(0, getIndex(row, col)); // O(n)
+           if (row == size) myUF.union(size * size + 1, getIndex(row, col)); // O(n)
     }
 
     /**
